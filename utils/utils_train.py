@@ -30,7 +30,7 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
     model.train()
 
     # cos anneal learning rate
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 10, T_mult=2)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 20, T_mult=2)
 
     for epoch in range(epochs):
 
@@ -47,6 +47,7 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
         valid_label_list = []
 
         # Model Training
+        model.train()
         for i, (train_images, train_labels) in enumerate(loader_train):
             # split different modal images
             train_img_1, train_img_2, train_img_3 = train_images[0], train_images[1], train_images[2]
@@ -83,7 +84,7 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
 
         # Model Testing
         with torch.no_grad():
-
+            model.eval()
             for i, (valid_images, valid_labels) in enumerate(loader_valid):
                 # split different modal images
                 valid_img_1, valid_img_2, valid_img_3 = valid_images[0], valid_images[1], valid_images[2]
@@ -116,25 +117,27 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
             accuracy_list_train.append(train_accuracy.detach().cpu().item() / len(loader_train))
             accuracy_list_valid.append(valid_accuracy.detach().cpu().item() / len(loader_valid))
 
+        # accuracy
+        train_accuracy_avg = metrics.recall_score(train_label_list, train_score_list)
+        valid_accuracy_avg = metrics.recall_score(valid_label_list, valid_score_list)
+
         # recall
-        train_recall = metrics.recall_score(train_score_list, train_label_list, average="micro")
-        valid_recall = metrics.recall_score(valid_score_list, valid_label_list, average="micro")
+        train_recall = metrics.recall_score(train_label_list, train_score_list)
+        valid_recall = metrics.recall_score(valid_label_list, valid_score_list)
 
         # f1-score
-        train_f1_score = metrics.f1_score(train_score_list, train_label_list, average="micro")
-        valid_f1_score = metrics.f1_score(valid_score_list, valid_label_list, average="micro")
+        train_f1_score = metrics.f1_score(train_label_list, train_score_list)
+        valid_f1_score = metrics.f1_score(valid_label_list, valid_score_list)
 
         # precision
-        train_precision = metrics.precision_score(train_score_list, train_label_list, average="micro")
-        valid_precision = metrics.precision_score(valid_score_list, valid_label_list, average="micro")
+        train_precision = metrics.precision_score(train_label_list, train_score_list)
+        valid_precision = metrics.precision_score(valid_label_list, valid_score_list)
 
         # output the result
         train_avg_loss = train_avg_loss.detach().cpu().item()
-        train_accuracy_avg = train_accuracy.detach().cpu().item() / len(loader_train)
         print('Train: Epoch %d, Accuracy %f, Train Loss: %f' % (epoch, train_accuracy_avg, train_avg_loss))
 
         valid_avg_loss = valid_avg_loss.detach().cpu().item()
-        valid_accuracy_avg = valid_accuracy.detach().cpu().item() / len(loader_valid)
         print('Valid: Epoch %d, Accuracy %f, Valid Loss: %f' % (epoch, valid_accuracy_avg, valid_avg_loss))
 
         # preserve the best validation accuracy model
