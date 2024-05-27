@@ -118,8 +118,8 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
             accuracy_list_valid.append(valid_accuracy.detach().cpu().item() / len(loader_valid))
 
         # accuracy
-        train_accuracy_avg = metrics.recall_score(train_label_list, train_score_list)
-        valid_accuracy_avg = metrics.recall_score(valid_label_list, valid_score_list)
+        train_accuracy_avg = metrics.accuracy_score(train_label_list, train_score_list)
+        valid_accuracy_avg = metrics.accuracy_score(valid_label_list, valid_score_list)
 
         # recall
         train_recall = metrics.recall_score(train_label_list, train_score_list)
