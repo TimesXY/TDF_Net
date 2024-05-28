@@ -22,8 +22,8 @@ class TDF_Net(nn.Module):
                                down_sample_factor=4, offset_scale=None, offset_groups=None, offset_kernel_size=6,
                                group_queries=True, group_key_values=True)
 
-        # contrast clustering Loss  - k_class=24, div=8 -
-        self.clustering = CCLoss(dim=channel, k_class=12, div=8, temp=1.0)
+        # contrast clustering Loss  - k_class=2, div=8 -
+        self.clustering = CCLoss(dim=channel, k_class=2, div=8, temp=1.0)
 
         # modal transition loss
         self.rev = ModalTransition(in_c=channel, out_c=channel, split_along_dim=1, fix_random_seed=True)
@@ -50,7 +50,7 @@ class TDF_Net(nn.Module):
         x3_trans = x3_trans.view(x3_trans.size(0), -1, x3_trans.size(-1))
 
         # contrast clustering Loss
-        loss_clu, _ = self.clustering(x1, x2, x3)
+        loss_clu, _ = self.clustering(x1, x2, x3, y)
 
         # modal transition loss
         loss_mod, _ = self.rev(x1, x2, x3)
