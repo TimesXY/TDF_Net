@@ -32,7 +32,7 @@ def sk_dist(scores, eps=0.05, n_iter=3):
 
 
 class CCLoss(nn.Module):
-    def __init__(self, dim=256, k_class=12, div=4, temp=0.8):
+    def __init__(self, dim=256, k_class=2, div=4, temp=0.8):
         super().__init__()
 
         # Establishment of clustering centers
@@ -55,7 +55,7 @@ class CCLoss(nn.Module):
                                   nn.AdaptiveAvgPool2d((1, 1)),
                                   nn.Flatten())
 
-    def forward(self, x1, x2, x3):
+    def forward(self, x1, x2, x3, y):
         # reshape of the tensor
         x1 = self.gap1(x1)
         x2 = self.gap2(x2)
@@ -81,14 +81,14 @@ class CCLoss(nn.Module):
         p_e = F.softmax(scores_e / self.temp, dim=1)
 
         # supervised contrastive clustering loss
-        # y = F.one_hot(y)
-        # loss_sup = -0.5 * torch.mean(y * torch.log(p_b) + y * torch.log(p_d) + y * torch.log(p_e))
+        y = F.one_hot(y)
+        loss_sup = -0.5 * torch.mean(y * torch.log(p_b) + y * torch.log(p_d) + y * torch.log(p_e))
 
         # swap prediction problem
         loss_un_sup = -0.5 * torch.mean(q_d * torch.log(p_b) + q_e * torch.log(p_d) + q_b * torch.log(p_e))
 
         # total loss
-        # loss = (0.5 * loss_sup + loss_un_sup) / 2.
+        loss = (0.5 * loss_sup + loss_un_sup) / 2.
 
         # normalize prototypes
         with torch.no_grad():
