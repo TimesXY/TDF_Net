@@ -2,6 +2,9 @@
 This repository is an official implementation of the paper "TDF-Net: Trusted Dynamic 
 Feature Fusion Network for Breast Cancer Diagnosis using Incomplete Multimodal Ultrasound."
 
+Pengfei Yan, Wushuang Gong, Minglei Li, Jiusi Zhang, Xiang Li, Yuchen Jiang, Hao Luo, and Hang Zhou. (2024). 
+TDF-Net: Trusted Dynamic Feature Fusion Network for breast cancer diagnosis using incomplete multimodal ultrasound. Information Fusion, 102592.
+
 ## Dataset
 We collected a multimodal ultrasound image dataset for classification in breast cancer, 
 including 145 benign and 103 malignant cases. This dataset is available for only non-commercial 
