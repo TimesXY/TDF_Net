@@ -9,8 +9,8 @@ TDF-Net: Trusted Dynamic Feature Fusion Network for breast cancer diagnosis usin
 We collected a multimodal ultrasound image dataset for classification in breast cancer, 
 including 145 benign and 103 malignant cases. This dataset is available for only non-commercial 
 use in research or educational purposes. As long as you use the dataset for these purposes, you can
-edit or process images in the dataset. (Note that the full dataset will be made publicly available 
-upon the publication of the manuscript)
+edit or process images in the dataset. 
+https://www.kaggle.com/datasets/timesxy/multimodal-breast-ultrasound-dataset-us3m
 
 ## Code Usage
 
